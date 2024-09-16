@@ -36,6 +36,8 @@ namespace LibraryManager.API.Persistance
                 .Entity<User>(u =>
                 {
                     u.HasKey(u => u.Id);
+
+                    u.HasMany(u => u.Loans).WithOne(u => u.User).HasForeignKey(u => u.IdUser).OnDelete(DeleteBehavior.Restrict);
                 });
 
             base.OnModelCreating(builder);

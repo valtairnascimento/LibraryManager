@@ -20,9 +20,14 @@ namespace LibraryManager.API.Controllers
         public IActionResult Get(string search = "")
         {
 
-            var users = _context.Users.ToList();
+            var users = _context.Users
+                .Include(u => u.Loans)
+                    .ThenInclude(l => l.Book)
+                .ToList();
 
-            return Ok(users);
+            var model = users.Select(u => UserViewModel.FromEntity(u)).ToList();
+
+            return Ok(model);
         }
 
         [HttpGet("{id}")]
@@ -30,8 +35,8 @@ namespace LibraryManager.API.Controllers
         {
             var user = _context.Users
                 .Include(u => u.Loans)
-                .ThenInclude(u => u.LoanDate)
-                .SingleOrDefault(u => u.Id == id);  
+                    .ThenInclude(u => u.Book)
+                .FirstOrDefault(u => u.Id == id);  
 
             if (user is null)
             {

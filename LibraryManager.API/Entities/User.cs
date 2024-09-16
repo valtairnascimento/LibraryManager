@@ -2,11 +2,13 @@
 {
     public class User : BaseEntity
     {
-        public User(string name, string email, DateTime birthDate)
+        public User(string name, string email, DateTime birthDate) :base()
         {
             Name = name;
             Email = email;
             BirthDate = birthDate;
+
+            Loans = [];
 
         }
 

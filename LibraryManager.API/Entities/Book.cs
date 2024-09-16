@@ -3,7 +3,7 @@ namespace LibraryManager.API.Entities
 {
     public class Book : BaseEntity
     {
-        public Book(string title, string author, string iSBN, DateTime publicationYear)
+        public Book(string title, string author, string iSBN, DateTime publicationYear) : base()
         {
             Title = title;
             Author = author;
