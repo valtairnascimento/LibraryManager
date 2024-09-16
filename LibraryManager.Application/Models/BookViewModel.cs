@@ -1,7 +1,7 @@
 ﻿
-using LibraryManager.API.Entities;
+using LibraryManager.Core.Entities;
 
-namespace LibraryManager.API.Models
+namespace LibraryManager.Application.Models
 {
     public class BookViewModel
     {
@@ -20,7 +20,7 @@ namespace LibraryManager.API.Models
         public string Isbn { get; private set; }
         public DateTime PublicationYear { get; private set; }
 
-        public static BookViewModel FromEntity(Book book) 
+        public static BookViewModel FromEntity(Book book)
             => new(book.Id, book.Title, book.Author, book.ISBN, book.PublicationYear);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace LibraryManager.API.Enums
+﻿namespace LibraryManager.Core.Enums
 {
     public enum BookStatusEnum
     {

@@ -1,6 +1,7 @@
-﻿using LibraryManager.API.Entities;
-using LibraryManager.API.Models;
-using LibraryManager.API.Persistance;
+﻿
+using LibraryManager.Application.Models;
+using LibraryManager.Core.Entities;
+using LibraryManager.Infrastructure.Persistance;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

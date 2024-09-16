@@ -1,6 +1,7 @@
-﻿using LibraryManager.API.Entities;
+﻿
+using LibraryManager.Core.Entities;
 
-namespace LibraryManager.API.Models
+namespace LibraryManager.Application.Models
 {
     public class CreateBookInputModel
     {
@@ -9,7 +10,7 @@ namespace LibraryManager.API.Models
         public string ISBN { get; set; }
         public DateTime PublicationYear { get; set; }
 
-        public Book ToEntity() 
+        public Book ToEntity()
             => new(Title, Author, ISBN, PublicationYear);
 
     }

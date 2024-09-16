@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace LibraryManager.API.Persistance.Migrations
+namespace LibraryManager.Infrastructure.Persistance.Migrations
 {
     /// <inheritdoc />
     public partial class PrimeiraMigration : Migration

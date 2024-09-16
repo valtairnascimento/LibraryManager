@@ -1,6 +1,7 @@
-﻿using LibraryManager.API.Entities;
+﻿
+using LibraryManager.Core.Entities;
 
-namespace LibraryManager.API.Models
+namespace LibraryManager.Application.Models
 {
     public class UserViewModel
     {
@@ -22,6 +23,6 @@ namespace LibraryManager.API.Models
             var loans = user.Loans.Where(l => l.Book != null).Select(l => l.Book.Title).ToList();
             return new UserViewModel(user.Name, user.Email, user.BirthDate, loans);
         }
-          
+
     }
 }

@@ -1,8 +1,8 @@
-﻿namespace LibraryManager.API.Entities
+﻿namespace LibraryManager.Core.Entities
 {
     public class User : BaseEntity
     {
-        public User(string name, string email, DateTime birthDate) :base()
+        public User(string name, string email, DateTime birthDate) : base()
         {
             Name = name;
             Email = email;
