@@ -1,8 +1,8 @@
 ﻿
 using LibraryManager.Application.Models;
+using LibraryManager.Application.Service;
 using LibraryManager.Infrastructure.Persistance;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.API.Controllers
 {
@@ -11,78 +11,65 @@ namespace LibraryManager.API.Controllers
     public class LoansController : ControllerBase
     {
       private readonly LibraryManagerDbContext _context;
-        public LoansController(LibraryManagerDbContext context) 
+        private readonly ILoanService _service;
+        public LoansController(LibraryManagerDbContext context, ILoanService service) 
         {
            _context = context;  
+           _service = service;
         }
 
         [HttpGet]
-        public IActionResult Get(string search = "")
+        public IActionResult GetAll(string search = "")
         {
-            var loan = _context.Loans.
-                Include(l => l.User)
-                .Include(l => l.Book)
-                .Where(l => !l.IsDeleted)
-                .ToList();
+            var result = _service.GetAll();
 
-            var model = loan.Select(LoanViewModel.FromEntity).ToList();
-
-            return Ok(model);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id) 
-        { 
-            var loan = _context.Loans
-                .Include(l => l.User)
-                .Include(l => l.Book)
-                .SingleOrDefault(l => l.Id == id);
+        {
+            var result = _service.GetById(id);
 
-            var model = LoanViewModel.FromEntity(loan);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Message);
+            }
 
-            return Ok(model);
+            return Ok(result);
         }
 
         [HttpPost]
         public IActionResult Post(CreateLoanInputModel model)
         {
-            var loan = model.ToEntity();
+            var result = _service.Insert(model);
 
-            _context.Loans.Add(loan);
-            _context.SaveChanges();
-
-            return CreatedAtAction(nameof(GetById), new {id =1}, model);
+            return CreatedAtAction(nameof(GetById), new {id = result.Data}, model);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Put(int id,UpdateLoanInputModel model) 
+        [HttpPut("return/{id}")]
+        public IActionResult Put(int id, DateTime returnDate) 
         {
 
-            var loan = _context.Loans.SingleOrDefault(l => l.Id == id);
-            if (loan == null)
+          var result = _service.ReturnBook(id, returnDate);
+
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return BadRequest(result.Message);
             }
 
-            loan.Update(model.IdBook, model.IdLoan, model.ReturnDate);
-
-            _context.Loans.Update(loan);
-            _context.SaveChanges();
-
-            return NoContent();
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id) 
         {
-            var loan = _context.Loans.SingleOrDefault(l => l.Id == id);
-            if (loan == null)
+            var result = _service.Delete(id);
+
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return BadRequest(result.Message);
             }
-            loan.SetAsDeleted();
-            _context.Loans.Update(loan);
-            _context.SaveChanges();
 
             return NoContent();
         }

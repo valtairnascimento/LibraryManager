@@ -18,6 +18,7 @@ namespace LibraryManager.Infrastructure.Persistance
                  .Entity<Book>(b =>
                  {
                      b.HasKey(b => b.Id);
+                    
                  });
             builder
                 .Entity<Loan>(l =>
@@ -31,6 +32,7 @@ namespace LibraryManager.Infrastructure.Persistance
                     l.HasOne(l => l.Book)
                     .WithMany(l => l.Loans)
                     .HasForeignKey(l => l.IdBook).OnDelete(DeleteBehavior.Restrict);
+
                 });
             builder
                 .Entity<User>(u =>
@@ -38,6 +40,7 @@ namespace LibraryManager.Infrastructure.Persistance
                     u.HasKey(u => u.Id);
 
                     u.HasMany(u => u.Loans).WithOne(u => u.User).HasForeignKey(u => u.IdUser).OnDelete(DeleteBehavior.Restrict);
+                    
                 });
 
             base.OnModelCreating(builder);

@@ -1,9 +1,8 @@
 ﻿
 using LibraryManager.Application.Models;
-using LibraryManager.Core.Entities;
+using LibraryManager.Application.Service;
 using LibraryManager.Infrastructure.Persistance;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.API.Controllers
 {
@@ -11,68 +10,52 @@ namespace LibraryManager.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly LibraryManagerDbContext _context;  
-        public UsersController(LibraryManagerDbContext context) 
+        private readonly LibraryManagerDbContext _context;
+        private readonly IUserService _service;
+        public UsersController(LibraryManagerDbContext context, IUserService service) 
         {
         _context = context;
+        _service = service;
         }
 
         [HttpGet]
-        public IActionResult Get(string search = "")
+        public IActionResult GetAll(string search = "")
         {
+            var result = _service.GetAll();
 
-            var users = _context.Users
-                .Include(u => u.Loans)
-                    .ThenInclude(l => l.Book)
-                .ToList();
-
-            var model = users.Select(u => UserViewModel.FromEntity(u)).ToList();
-
-            return Ok(model);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id) 
         {
-            var user = _context.Users
-                .Include(u => u.Loans)
-                    .ThenInclude(u => u.Book)
-                .FirstOrDefault(u => u.Id == id);  
+           var result = _service.GetById(id);
 
-            if (user is null)
+            if (!result.IsSuccess)
             {
-                return NotFound();  
+                return BadRequest(result.Message);
             }
 
-            var model = UserViewModel.FromEntity(user);
-
-            return Ok(model);
+            return Ok(result);
         }
         //Post api/users
         [HttpPost]
         public IActionResult Post(CreateUserInputModel model)
         {
-            var user = new User(model.Name, model.Email, model.BirthDate);
+           var result = _service.Insert(model);
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
-
-            return NoContent();
+            return CreatedAtAction(nameof(GetById), new { id = result.Data }, model);
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, UpdateUserInputModel model) 
         { 
-            var user = _context.Users.SingleOrDefault(u => u.Id == id); 
-            if (user is null)
+            var result = _service.Update(model);
+
+            if (!result.IsSuccess) 
             {
-                return NotFound();
+                return BadRequest(result.Message);
             }
-
-            user.Update(model.Name, model.Email, model.BirthDate);
-
-            _context.Users.Update(user);
-            _context.SaveChanges();
 
             return NoContent();
         }
@@ -80,16 +63,12 @@ namespace LibraryManager.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id) 
         {
-            var user = _context.Users.SingleOrDefault(u => u.Id == id);
-            if (user is null)
+            var result = _service.Delete(id);
+
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return BadRequest(result.Message);
             }
-
-            user.SetAsDeleted();
-            _context.Users.Update(user);
-            _context.SaveChanges(); 
-
 
             return NoContent();
         }
