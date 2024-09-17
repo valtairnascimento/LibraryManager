@@ -9,7 +9,7 @@ Este projeto foi desenvolvido como parte da mentoria .NET Start do Método .NET.
 - **Command Query Responsibility Segregation (CQRS)**  - Separação de responsabilidades entre comandos e consultas. ![❌](https://img.shields.io/badge/-❌-red)
 - **Padrão Repository** - Abstração para operações de acesso a dados, isolando a lógica de persistência do banco de dados.  ![❌](https://img.shields.io/badge/-❌-red)
 - **SQL Server**  - Banco de dados relacional utilizado para armazenar as informações. ![✔️](https://img.shields.io/badge/-✔️-brightgreen)
-- **Autenticação e Autorização com JWT**- Implementação de segurança com JSON Web Tokens (JWT) para autenticar e autorizar os usuários.  ![❌](https://img.shields.io/badge/-❌-red) 
+- **Autenticação e Autorização**- Implementação de segurança JWT Tokens para autenticar e autorizar os usuários.  ![❌](https://img.shields.io/badge/-❌-red) 
 - **.NET 8** - Framework utilizado para o desenvolvimento da aplicação.  ![✔️](https://img.shields.io/badge/-✔️-brightgreen)
 
 ## Autor
