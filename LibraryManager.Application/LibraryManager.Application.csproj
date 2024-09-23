@@ -15,9 +15,4 @@
     <ProjectReference Include="..\LibraryManager.Infrastructure\LibraryManager.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\BookCommands\" />
-    <Folder Include="Queries\BookQueries\" />
-  </ItemGroup>
-
 </Project>
