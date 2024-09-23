@@ -1,4 +1,5 @@
-﻿using LibraryManager.Application.Service;
+﻿using LibraryManager.Application.Commands.LoanCommands.InsertLoan;
+using LibraryManager.Application.Service;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LibraryManager.Application
@@ -8,7 +9,8 @@ namespace LibraryManager.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services
-                .AddServices();
+                .AddServices()
+                .AddHandlers();
             return services;
         }
 
@@ -20,5 +22,13 @@ namespace LibraryManager.Application
 
             return services;
         }
+
+        private static IServiceCollection AddHandlers(this IServiceCollection services) 
+        {
+        services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<InsertLoanCommand>());  
+
+            return services;
+        }
+
     }
 }
