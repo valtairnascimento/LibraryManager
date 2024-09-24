@@ -1,20 +1,19 @@
 ﻿using LibraryManager.Application.Models;
-using LibraryManager.Infrastructure.Persistance;
+using LibraryManager.Core.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.Application.Commands.LoanCommands.DeleteLoan
 {
     public class DeleteLoanHandler : IRequestHandler<DeleteLoanCommand, ResultViewModel>
     {
-        private readonly LibraryManagerDbContext _context;
-        public DeleteLoanHandler(LibraryManagerDbContext context)
+        private readonly ILoanRepository _repository;
+        public DeleteLoanHandler(ILoanRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
         public async Task<ResultViewModel> Handle(DeleteLoanCommand request, CancellationToken cancellationToken)
         {
-            var loan = await _context.Loans.SingleOrDefaultAsync(l => l.Id == request.Id);
+            var loan = await _repository.GetById(request.Id);
 
             if (loan == null)
             {
@@ -22,8 +21,8 @@ namespace LibraryManager.Application.Commands.LoanCommands.DeleteLoan
             }
 
             loan.SetAsDeleted();
-            _context.Loans.Update(loan);
-            await _context.SaveChangesAsync();
+            await _repository.Update(loan);
+            
 
             return ResultViewModel.Success();
         }

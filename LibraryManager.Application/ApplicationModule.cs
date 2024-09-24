@@ -1,5 +1,6 @@
 ﻿using LibraryManager.Application.Commands.LoanCommands.InsertLoan;
-using LibraryManager.Application.Service;
+using LibraryManager.Application.Models;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LibraryManager.Application
@@ -9,23 +10,16 @@ namespace LibraryManager.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services
-                .AddServices()
                 .AddHandlers();
             return services;
         }
-
-        private static IServiceCollection AddServices(this IServiceCollection services) 
-        {
-            services.AddScoped<IBookService, BookService>();
-            services.AddScoped<ILoanService, LoanService>();
-            services.AddScoped<IUserService, UserService>();
-
-            return services;
-        }
+       
 
         private static IServiceCollection AddHandlers(this IServiceCollection services) 
         {
-        services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<InsertLoanCommand>());  
+            services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<InsertLoanCommand>());
+
+            services.AddTransient<IPipelineBehavior<InsertLoanCommand, ResultViewModel<int>>, ValidateInsertLoanCommandBehavior>();
 
             return services;
         }

@@ -1,22 +1,19 @@
 ﻿using LibraryManager.Application.Models;
-using LibraryManager.Infrastructure.Persistance;
+using LibraryManager.Core.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.Application.Queries.BookQueries.GetAll
 {
     public class GetAllBooksHandler : IRequestHandler<GetAllBooksQuery, ResultViewModel<List<BookViewModel>>>
     {
-        private readonly LibraryManagerDbContext _context;
-        public GetAllBooksHandler(LibraryManagerDbContext context)
+        private readonly IBookRepository _repository;
+        public GetAllBooksHandler(IBookRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
         public async Task<ResultViewModel<List<BookViewModel>>> Handle(GetAllBooksQuery request, CancellationToken cancellationToken)
         {
-            var book = await _context.Books
-                .Where(b => (request.Search == "" || b.Title.Contains(request.Search)) || b.Author.Contains(request.Search))
-                .ToListAsync();
+            var book = await _repository.GetAll();
 
             var model = book.Select(BookViewModel.FromEntity).ToList();
 

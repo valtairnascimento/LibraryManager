@@ -1,4 +1,5 @@
 using LibraryManager.Application;
+using LibraryManager.Infrastructure;
 using LibraryManager.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,10 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-var connectionString = builder.Configuration.GetConnectionString("LibraryManagerCs");
-builder.Services.AddDbContext<LibraryManagerDbContext>(o => o.UseSqlServer(connectionString));
-
-builder.Services.AddApplication();
+builder.Services
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

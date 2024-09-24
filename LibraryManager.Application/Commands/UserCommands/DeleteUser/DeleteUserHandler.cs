@@ -1,20 +1,19 @@
 ﻿using LibraryManager.Application.Models;
-using LibraryManager.Infrastructure.Persistance;
+using LibraryManager.Core.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.Application.Commands.UserCommands.DeleteUser
 {
     public class DeleteUserHandler : IRequestHandler<DeleteUserCommand, ResultViewModel>
     {
-        private readonly LibraryManagerDbContext _context;
-        public DeleteUserHandler(LibraryManagerDbContext context)
+        private readonly IUserRepository _repository;
+        public DeleteUserHandler(IUserRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
         public async Task<ResultViewModel> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == request.Id);
+            var user = await _repository.GetById(request.Id);
 
             if (user is null)
             {
@@ -22,8 +21,7 @@ namespace LibraryManager.Application.Commands.UserCommands.DeleteUser
             }
 
             user.SetAsDeleted();
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+            await _repository.Update(user);
 
             return ResultViewModel.Success();
         }

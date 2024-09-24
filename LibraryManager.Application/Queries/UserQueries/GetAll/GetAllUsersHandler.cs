@@ -1,23 +1,19 @@
 ﻿using LibraryManager.Application.Models;
-using LibraryManager.Infrastructure.Persistance;
+using LibraryManager.Core.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.Application.Queries.UserQueries.GetAll
 {
     public class GetAllUsersHandler : IRequestHandler<GetAllUsersQuery, ResultViewModel<List<UserViewModel>>>
     {
-        private readonly LibraryManagerDbContext _context;
-        public GetAllUsersHandler(LibraryManagerDbContext context)
+        private readonly IUserRepository _repository;
+        public GetAllUsersHandler(IUserRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
         public async Task<ResultViewModel<List<UserViewModel>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
-            var users = await _context.Users
-               .Include(u => u.Loans)
-                   .ThenInclude(l => l.Book)
-               .ToListAsync();
+            var users = await _repository.GetAll();
 
             var model = users.Select(UserViewModel.FromEntity).ToList();
 

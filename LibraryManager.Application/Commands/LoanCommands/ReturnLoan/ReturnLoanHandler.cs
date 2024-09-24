@@ -1,19 +1,19 @@
 ﻿using LibraryManager.Application.Models;
-using LibraryManager.Infrastructure.Persistance;
+using LibraryManager.Core.Repositories;
 using MediatR;
 
 namespace LibraryManager.Application.Commands.LoanCommands.ReturnLoan
 {
     public class ReturnLoanHandler : IRequestHandler<ReturnLoanCommand, ResultViewModel>
     {
-        private readonly LibraryManagerDbContext _context;
-        public ReturnLoanHandler(LibraryManagerDbContext context)
+        private readonly ILoanRepository _repository;
+        public ReturnLoanHandler(ILoanRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
         public async Task<ResultViewModel> Handle(ReturnLoanCommand request, CancellationToken cancellationToken)
         {
-            var loan = _context.Loans.Find(request.Id);
+            var loan = await _repository.GetById(request.Id);
 
             if (loan is null)
             {
@@ -26,7 +26,7 @@ namespace LibraryManager.Application.Commands.LoanCommands.ReturnLoan
             }
 
             loan.ReturnDate = request.ReturnDate;
-            await _context.SaveChangesAsync();
+            await _repository.Update(loan);
 
             var loanDays = 3;
             var addDate = loan.LoanDate.AddDays(loanDays);

@@ -1,22 +1,19 @@
 ﻿using LibraryManager.Application.Models;
-using LibraryManager.Infrastructure.Persistance;
+using LibraryManager.Core.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.Application.Queries.BookQueries.GetById
 {
     public class GetBookByIdHandler : IRequestHandler<GetBookByIdQuery, ResultViewModel<BookViewModel>>
     {
-        private readonly LibraryManagerDbContext _context;
-        public GetBookByIdHandler(LibraryManagerDbContext context)
+        private readonly IBookRepository _repository;
+        public GetBookByIdHandler(IBookRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
         public async Task<ResultViewModel<BookViewModel>> Handle(GetBookByIdQuery request, CancellationToken cancellationToken)
         {
-            var book = await _context.Books
-                 .Include(b => b.Loans)
-                 .SingleOrDefaultAsync(b => b.Id == request.Id);            
+            var book = await _repository.GetDetailsById(request.Id);            
 
             if (book is null)
             {
