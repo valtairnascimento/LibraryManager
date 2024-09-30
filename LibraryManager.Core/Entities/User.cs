@@ -2,11 +2,13 @@
 {
     public class User : BaseEntity
     {
-        public User(string name, string email, DateTime birthDate) : base()
+        public User(string name, string email, DateTime birthDate, string password, string role) : base()
         {
             Name = name;
             Email = email;
             BirthDate = birthDate;
+            Password = password;
+            Role = role;
 
             Loans = [];
 
@@ -14,6 +16,8 @@
 
         public string Name { get; private set; }
         public string Email { get; private set; }
+        public string Password { get; private set; }
+        public string Role { get; private set; }
         public DateTime BirthDate { get; private set; }
         public List<Loan> Loans { get; private set; }
 

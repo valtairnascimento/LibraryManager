@@ -5,6 +5,7 @@ using LibraryManager.Application.Commands.LoanCommands.ReturnLoan;
 using LibraryManager.Application.Queries.LoanQueries.GetAll;
 using LibraryManager.Application.Queries.LoanQueries.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManager.API.Controllers
@@ -21,6 +22,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "client, admin")]
         public async Task<IActionResult> GetAll(string search = "")
         {
             var result = await _mediator.Send(new GetAllLoansQuery());
@@ -29,6 +31,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "client, admin")]
         public async Task<IActionResult> GetById(int id) 
         {
             var result = await _mediator.Send(new GetLoanByIdQuery(id));
@@ -42,6 +45,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Post(InsertLoanCommand command)
         {
             var result = await _mediator.Send(command);
@@ -54,6 +58,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPut("return/{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Put(int id, ReturnLoanCommand command) 
         {
 
@@ -68,6 +73,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int id) 
         {
             var result = await _mediator.Send(new DeleteLoanCommand(id));

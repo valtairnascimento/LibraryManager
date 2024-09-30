@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.Infrastructure.Persistance.Repositories
 {
-    internal class BookRepository : IBookRepository
+    public class BookRepository : IBookRepository
     {
         private readonly LibraryManagerDbContext _context;
         public BookRepository(LibraryManagerDbContext context)

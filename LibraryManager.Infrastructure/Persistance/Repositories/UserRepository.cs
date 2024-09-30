@@ -11,7 +11,7 @@ namespace LibraryManager.Infrastructure.Persistance.Repositories
         {
             _context = context;
         }
-        public async Task<int> Add(User user)
+        public async Task<int> AddAsync(User user)
         {
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
@@ -47,6 +47,11 @@ namespace LibraryManager.Infrastructure.Persistance.Repositories
                   .FirstOrDefaultAsync(u => u.Id == id);
 
             return user;
+        }
+
+        public async Task<User> GetUserByEmailAndPassword(string email, string passwordHash)
+        {
+           return await _context.Users.SingleOrDefaultAsync(u => u.Email == email && u.Password == passwordHash);
         }
 
         public async Task Update(User user)

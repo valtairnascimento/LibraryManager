@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManager.Infrastructure.Persistance.Migrations
 {
     [DbContext(typeof(LibraryManagerDbContext))]
-    [Migration("20240916142955_PrimeiraMigration")]
-    partial class PrimeiraMigration
+    [Migration("20240930190911_AddLoginColumns")]
+    partial class AddLoginColumns
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,6 +116,14 @@ namespace LibraryManager.Infrastructure.Persistance.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

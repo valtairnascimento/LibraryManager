@@ -5,12 +5,14 @@ using LibraryManager.Application.Commands.BookCommands.UpdateBook;
 using LibraryManager.Application.Queries.BookQueries.GetAll;
 using LibraryManager.Application.Queries.BookQueries.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManager.API.Controllers
 {
     [Route("api/books")]
     [ApiController]
+   
     public class BooksController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -20,6 +22,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles ="client, admin")]
         public async Task<IActionResult> GetAll(string search = "")
         {
             var result = await _mediator.Send(new GetAllBooksQuery());   
@@ -28,6 +31,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "client, admin")]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _mediator.Send(new GetBookByIdQuery(id));
@@ -41,6 +45,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Post(InsertBookCommand command)
         {
 
@@ -50,6 +55,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Put(int id, UpdateBookCommand command)
         {
             var result = await _mediator.Send(command);
@@ -63,6 +69,7 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int id) 
         {
 
